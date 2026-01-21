@@ -2,8 +2,11 @@
 **System Administrator | IT Infrastructure & Cloud Support | Local Area Networks**
 
 📍 Lviv, Ukraine
+
 📞 +380504820651
+
 ✉️ sarnawskiy@gmail.com
+
 🔗 [Linkedin](https://www.linkedin.com/in/mykola-sarnavskiy/)
 
 ---
