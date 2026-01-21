@@ -1,0 +1,62 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Print Styles for PDF Export */
+@media print {
+
+  /* Hide background gradients for cleaner PDF */
+  body {
+    background: white !important;
+  }
+
+  /* Hide print button when printing */
+  .print\:hidden {
+    display: none !important;
+  }
+
+  /* Remove shadows and rounded corners for print */
+  * {
+    box-shadow: none !important;
+  }
+
+  /* Ensure proper page breaks */
+  .cv-content {
+    page-break-inside: avoid;
+  }
+
+  /* Optimize margins for print */
+  @page {
+    margin: 1cm;
+  }
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: 'Inter', sans-serif;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
