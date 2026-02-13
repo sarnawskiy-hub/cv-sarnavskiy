@@ -51,8 +51,8 @@ export default {
                 },
             },
             fontFamily: {
-                heading: ['"Space Grotesk"', 'system-ui', 'sans-serif'],
-                sans: ['"DM Sans"', 'system-ui', 'sans-serif'],
+                heading: ['"Clash Display"', 'system-ui', 'sans-serif'],
+                sans: ['"Satoshi"', 'system-ui', 'sans-serif'],
             },
             animation: {
                 'fade-in': 'fadeIn 0.8s ease-out forwards',

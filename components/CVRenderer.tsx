@@ -24,6 +24,7 @@ import {
     Code,
     Cloud,
 } from 'lucide-react';
+import ThemeToggle from './ThemeToggle';
 
 interface CVRendererProps {
     markdown: string;
@@ -66,6 +67,15 @@ const techIcons: Record<string, React.ReactNode> = {
     'jira': <Code className="w-4 h-4" />,
 };
 
+// Extract plain text from React children recursively
+function getPlainText(node: React.ReactNode): string {
+    if (typeof node === 'string') return node;
+    if (typeof node === 'number') return String(node);
+    if (Array.isArray(node)) return node.map(getPlainText).join('');
+    if (React.isValidElement(node) && node.props?.children) return getPlainText(node.props.children);
+    return '';
+}
+
 export default function CVRenderer({ markdown }: CVRendererProps) {
     const handlePrint = () => {
         window.print();
@@ -81,31 +91,23 @@ export default function CVRenderer({ markdown }: CVRendererProps) {
         return <Globe className="w-5 h-5 text-gold-500" />;
     };
 
-    // Pick a relevant icon for contact lines
-    const getContactIcon = (text: string) => {
-        if (text.includes('📍')) return <MapPin className="w-4 h-4 text-gold-400" />;
-        if (text.includes('📞')) return <Phone className="w-4 h-4 text-gold-400" />;
-        if (text.includes('✉️')) return <Mail className="w-4 h-4 text-gold-400" />;
-        if (text.includes('🔗')) return <LinkIcon className="w-4 h-4 text-gold-400" />;
-        return null;
-    };
-
     let sectionIndex = 0;
 
     return (
         <div className="relative min-h-screen pb-20">
-            {/* Hero Gradient Background */}
-            <div className="absolute top-0 left-0 right-0 h-[8rem] mesh-gradient -z-10 print:hidden">
+            {/* Aurora Gradient Background */}
+            <div className="absolute top-0 left-0 right-0 h-[12rem] mesh-gradient -z-10 print:hidden">
                 <div className="absolute inset-0 z-[2]" />
             </div>
 
-            {/* Floating Print Button */}
+            {/* Floating Controls */}
             <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 1, duration: 0.4 }}
-                className="fixed top-6 right-6 z-50 print:hidden"
+                className="fixed top-6 right-6 z-50 print:hidden flex items-center gap-3"
             >
+                <ThemeToggle />
                 <button
                     onClick={handlePrint}
                     className="flex items-center gap-2 px-5 py-2.5 bg-slate-900/80 hover:bg-slate-800 text-white rounded-full shadow-lg hover:shadow-gold-glow transform transition-all duration-300 backdrop-blur-md border border-white/10 hover:border-gold-500/30 cursor-pointer"
@@ -127,11 +129,11 @@ export default function CVRenderer({ markdown }: CVRendererProps) {
                             // ─── Name / Title ───
                             h1: ({ children }) => (
                                 <AnimatedSection index={0}>
-                                    <div className="text-center mb-10 relative">
-                                        <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold font-heading bg-clip-text text-transparent bg-gradient-to-r from-gold-400 via-gold-500 to-purple-400 pb-4 tracking-tight glow-text">
+                                    <div className="text-center mb-8 relative">
+                                        <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold font-heading bg-clip-text text-transparent bg-gradient-to-r from-gold-400 via-gold-500 to-purple-400 pb-4 tracking-tight glow-text leading-tight">
                                             {children}
                                         </h1>
-                                        <div className="mx-auto w-24 h-1 bg-gradient-to-r from-gold-500 to-purple-500 rounded-full mt-2" />
+                                        <div className="mx-auto w-32 h-1 bg-gradient-to-r from-gold-500 via-purple-500 to-gold-500 rounded-full mt-2" />
                                     </div>
                                 </AnimatedSection>
                             ),
@@ -166,17 +168,9 @@ export default function CVRenderer({ markdown }: CVRendererProps) {
 
                             // ─── Paragraphs ───
                             p: ({ children }) => {
-                                // Extract plain text from children recursively
-                                const getPlainText = (node: React.ReactNode): string => {
-                                    if (typeof node === 'string') return node;
-                                    if (typeof node === 'number') return String(node);
-                                    if (Array.isArray(node)) return node.map(getPlainText).join('');
-                                    if (React.isValidElement(node) && node.props?.children) return getPlainText(node.props.children);
-                                    return '';
-                                };
                                 const text = getPlainText(children);
 
-                                // Contact info — email
+                                // Contact info — email (clickable)
                                 if (text.includes('✉️')) {
                                     const email = text.replace(/✉️/g, '').trim();
                                     return (
@@ -189,7 +183,20 @@ export default function CVRenderer({ markdown }: CVRendererProps) {
                                     );
                                 }
 
-                                // Contact info — LinkedIn (contains markdown link, render children to preserve <a>)
+                                // Contact info — phone (clickable)
+                                if (text.includes('📞')) {
+                                    const phone = text.replace(/📞/g, '').trim();
+                                    return (
+                                        <AnimatedSection index={0} className="inline-block">
+                                            <a href={`tel:${phone.replace(/\s/g, '')}`} className="inline-flex items-center gap-2 text-gold-400 hover:text-gold-300 font-medium text-sm mr-4 mb-2 transition-colors cursor-pointer">
+                                                <Phone className="w-4 h-4 text-gold-400" />
+                                                <span>{phone}</span>
+                                            </a>
+                                        </AnimatedSection>
+                                    );
+                                }
+
+                                // Contact info — LinkedIn (render children to preserve <a> from markdown)
                                 if (text.includes('🔗')) {
                                     return (
                                         <AnimatedSection index={0} className="inline-block">
@@ -204,14 +211,13 @@ export default function CVRenderer({ markdown }: CVRendererProps) {
                                     );
                                 }
 
-                                // Contact info — location, phone
-                                if (text.includes('📍') || text.includes('📞')) {
-                                    const icon = getContactIcon(text);
-                                    const cleanText = text.replace(/📍|📞/g, '').trim();
+                                // Contact info — location
+                                if (text.includes('📍')) {
+                                    const cleanText = text.replace(/📍/g, '').trim();
                                     return (
                                         <AnimatedSection index={0} className="inline-block">
                                             <div className="inline-flex items-center gap-2 text-slate-400 font-medium text-sm mr-4 mb-2">
-                                                {icon}
+                                                <MapPin className="w-4 h-4 text-gold-400" />
                                                 <span>{cleanText}</span>
                                             </div>
                                         </AnimatedSection>
@@ -230,7 +236,7 @@ export default function CVRenderer({ markdown }: CVRendererProps) {
                             // ─── Bold text ───
                             strong: ({ children }) => {
                                 const text = String(children);
-                                // Date/location lines — check BEFORE the pipe check since these also contain pipes
+                                // Date/location lines — left-aligned, italic
                                 if (text.includes('Ukraine') || text.includes('Germany') || text.includes('Poland') || text.match(/\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+\d{4}\b/)) {
                                     return (
                                         <span className="block text-sm font-sans italic text-slate-500 mb-3 pl-4">
@@ -238,10 +244,10 @@ export default function CVRenderer({ markdown }: CVRendererProps) {
                                         </span>
                                     );
                                 }
-                                // Sub-title (role line)
+                                // Subtitle (role line after name) — bold, gradient
                                 if (text.includes('|')) {
                                     return (
-                                        <strong className="block text-center font-medium text-sm text-slate-400 tracking-wider uppercase mb-6">
+                                        <strong className="subtitle-line block text-center mb-6">
                                             {children}
                                         </strong>
                                     );
@@ -283,7 +289,7 @@ export default function CVRenderer({ markdown }: CVRendererProps) {
                                 </AnimatedSection>
                             ),
 
-                            // ─── Horizontal Rule ───
+                            // ─── Horizontal Rule — vibrant gradient ───
                             hr: () => (
                                 <div className="tech-divider print:hidden" />
                             ),
