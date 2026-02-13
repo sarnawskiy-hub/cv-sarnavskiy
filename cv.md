@@ -6,13 +6,13 @@
 ✉️ sarnawskiy@gmail.com
 🔗 [Linkedin](https://www.linkedin.com/in/mykola-sarnavskiy/)
 
----
+
 
 ## SUMMARY
 
 IT Infrastructure Specialist with over 10 years of experience combining a technical background in system administration and telecommunications. Experienced in managing Linux/Windows/MacOS environments, cloud virtualization (AWS, Oracle), and corporate ecosystems (Office 365, GSuite). Skilled in resolving complex hardware and software issues and managing technical teams. Passionate about using AI tools to automate IT processes and accelerate task execution.
 
----
+
 
 ## SKILLS
 
@@ -23,7 +23,7 @@ IT Infrastructure Specialist with over 10 years of experience combining a techni
 - **E-commerce:** Running a business on Etsy (international marketplace). Sales in 10 countries, primary market – USA.
 - **Languages:** English (Elementary), Ukrainian (Native), Polish (Working proficiency).
 
----
+
 
 ## PROFESSIONAL EXPERIENCE
 
@@ -93,7 +93,7 @@ IT Infrastructure Specialist with over 10 years of experience combining a techni
 - Bash and Cron scripting.
 - Remote support.
 
----
+
 
 ## EDUCATION
 
