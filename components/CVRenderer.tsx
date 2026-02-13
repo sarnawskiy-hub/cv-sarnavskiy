@@ -25,6 +25,7 @@ import {
     Cloud,
 } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
+import DynamicBackground from './DynamicBackground';
 
 interface CVRendererProps {
     markdown: string;
@@ -95,10 +96,8 @@ export default function CVRenderer({ markdown }: CVRendererProps) {
 
     return (
         <div className="relative min-h-screen pb-20">
-            {/* Aurora Gradient Background */}
-            <div className="absolute top-0 left-0 right-0 h-[12rem] mesh-gradient -z-10 print:hidden">
-                <div className="absolute inset-0 z-[2]" />
-            </div>
+            {/* Dynamic Particle Background */}
+            <DynamicBackground />
 
             {/* Floating Controls */}
             <motion.div
@@ -244,12 +243,15 @@ export default function CVRenderer({ markdown }: CVRendererProps) {
                                         </span>
                                     );
                                 }
-                                // Subtitle (role line after name) — bold, gradient
+                                // Subtitle (role line after name) — white/black + colored divider
                                 if (text.includes('|')) {
                                     return (
-                                        <strong className="subtitle-line block text-center mb-6">
-                                            {children}
-                                        </strong>
+                                        <div className="text-center mb-6">
+                                            <strong className="block font-bold text-sm tracking-[0.2em] uppercase text-white dark:text-white subtitle-text">
+                                                {children}
+                                            </strong>
+                                            <div className="mx-auto w-48 h-[2px] mt-3 rounded-full bg-gradient-to-r from-gold-500 via-purple-500 to-gold-500" />
+                                        </div>
                                     );
                                 }
                                 return (

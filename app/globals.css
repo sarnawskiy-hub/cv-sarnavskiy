@@ -188,7 +188,10 @@ body {
 .mesh-gradient::before {
     content: "";
     position: absolute;
-    top: 0; left: -50%; right: -50%; bottom: 0;
+    top: 0;
+    left: -50%;
+    right: -50%;
+    bottom: 0;
     background-image:
         radial-gradient(ellipse at 30% 50%, rgba(245, 158, 11, 0.25) 0, transparent 50%),
         radial-gradient(ellipse at 70% 50%, rgba(139, 92, 246, 0.25) 0, transparent 50%),
@@ -199,10 +202,25 @@ body {
 }
 
 @keyframes auroraShift {
-    0% { transform: translateX(-10%) rotate(0deg); opacity: 0.6; }
-    33% { transform: translateX(5%) rotate(1deg); opacity: 0.9; }
-    66% { transform: translateX(-5%) rotate(-1deg); opacity: 0.7; }
-    100% { transform: translateX(10%) rotate(0deg); opacity: 1; }
+    0% {
+        transform: translateX(-10%) rotate(0deg);
+        opacity: 0.6;
+    }
+
+    33% {
+        transform: translateX(5%) rotate(1deg);
+        opacity: 0.9;
+    }
+
+    66% {
+        transform: translateX(-5%) rotate(-1deg);
+        opacity: 0.7;
+    }
+
+    100% {
+        transform: translateX(10%) rotate(0deg);
+        opacity: 1;
+    }
 }
 
 /* ─── Glassmorphism Card ─── */
@@ -277,16 +295,14 @@ body {
 /* ─── Vibrant Divider ─── */
 .tech-divider {
     height: 2px;
-    background: linear-gradient(
-        90deg,
-        transparent 0%,
-        #F59E0B 15%,
-        #D946EF 35%,
-        #8B5CF6 50%,
-        #D946EF 65%,
-        #F59E0B 85%,
-        transparent 100%
-    );
+    background: linear-gradient(90deg,
+            transparent 0%,
+            #F59E0B 15%,
+            #D946EF 35%,
+            #8B5CF6 50%,
+            #D946EF 65%,
+            #F59E0B 85%,
+            transparent 100%);
     margin: 2rem 0;
     border-radius: 2px;
     opacity: var(--divider-opacity);
@@ -304,17 +320,16 @@ body {
 }
 
 /* ─── Subtitle Line ─── */
-.subtitle-line {
+.subtitle-text {
     font-weight: 700;
-    font-size: 1.05rem;
-    letter-spacing: 0.15em;
+    font-size: 0.9rem;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
-    background: linear-gradient(135deg, var(--gold), var(--purple));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    position: relative;
-    display: inline-block;
+    color: #ffffff;
+}
+
+[data-theme="light"] .subtitle-text {
+    color: #0f172a;
 }
 
 /* ─── Glow Text ─── */
@@ -335,8 +350,13 @@ body {
 }
 
 @keyframes gridFlow {
-    0% { background-position: 0 0; }
-    100% { background-position: 60px 60px; }
+    0% {
+        background-position: 0 0;
+    }
+
+    100% {
+        background-position: 60px 60px;
+    }
 }
 
 /* ─── Scrollbar ─── */
@@ -370,19 +390,23 @@ body {
         color: #000 !important;
         -webkit-print-color-adjust: exact;
     }
+
     .print\:hidden {
         display: none !important;
     }
+
     * {
         box-shadow: none !important;
         text-shadow: none !important;
     }
+
     .cv-container {
         box-shadow: none !important;
         max-width: 100% !important;
         padding: 0 !important;
         margin: 0 !important;
     }
+
     @page {
         margin: 1cm;
     }
@@ -396,7 +420,10 @@ body {
 
 /* ─── Reduced Motion ─── */
 @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
+
+    *,
+    *::before,
+    *::after {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
