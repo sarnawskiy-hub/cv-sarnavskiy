@@ -95,7 +95,7 @@ export default function CVRenderer({ markdown }: CVRendererProps) {
     return (
         <div className="relative min-h-screen pb-20">
             {/* Hero Gradient Background */}
-            <div className="absolute top-0 left-0 right-0 h-[28rem] mesh-gradient -z-10 print:hidden">
+            <div className="absolute top-0 left-0 right-0 h-[8rem] mesh-gradient -z-10 print:hidden">
                 <div className="absolute inset-0 z-[2]" />
             </div>
 
@@ -116,7 +116,7 @@ export default function CVRenderer({ markdown }: CVRendererProps) {
             </motion.div>
 
             {/* Main Content */}
-            <div className="max-w-5xl mx-auto px-4 sm:px-6 pt-4">
+            <div className="max-w-5xl mx-auto px-4 sm:px-6">
                 <div
                     id="cv-content"
                     className="glass-card rounded-3xl shadow-2xl p-6 sm:p-8 md:p-14 cv-container animate-glow-pulse"
@@ -166,21 +166,58 @@ export default function CVRenderer({ markdown }: CVRendererProps) {
 
                             // ─── Paragraphs ───
                             p: ({ children }) => {
-                                const text = String(children);
-                                // Contact info
-                                if (text.includes('📍') || text.includes('📞') || text.includes('✉️') || text.includes('🔗')) {
-                                    const icon = getContactIcon(text);
-                                    // Strip emoji from text
-                                    const cleanText = text.replace(/📍|📞|✉️|🔗/g, '').trim();
+                                // Extract plain text from children recursively
+                                const getPlainText = (node: React.ReactNode): string => {
+                                    if (typeof node === 'string') return node;
+                                    if (typeof node === 'number') return String(node);
+                                    if (Array.isArray(node)) return node.map(getPlainText).join('');
+                                    if (React.isValidElement(node) && node.props?.children) return getPlainText(node.props.children);
+                                    return '';
+                                };
+                                const text = getPlainText(children);
+
+                                // Contact info — email
+                                if (text.includes('✉️')) {
+                                    const email = text.replace(/✉️/g, '').trim();
+                                    return (
+                                        <AnimatedSection index={0} className="inline-block">
+                                            <a href={`mailto:${email}`} className="inline-flex items-center gap-2 text-gold-400 hover:text-gold-300 font-medium text-sm mr-4 mb-2 transition-colors cursor-pointer">
+                                                <Mail className="w-4 h-4 text-gold-400" />
+                                                <span>{email}</span>
+                                            </a>
+                                        </AnimatedSection>
+                                    );
+                                }
+
+                                // Contact info — LinkedIn (contains markdown link, render children to preserve <a>)
+                                if (text.includes('🔗')) {
                                     return (
                                         <AnimatedSection index={0} className="inline-block">
                                             <div className="inline-flex items-center gap-2 text-slate-400 font-medium text-sm mr-4 mb-2">
-                                                {icon}
-                                                <span>{cleanText || children}</span>
+                                                <LinkIcon className="w-4 h-4 text-gold-400" />
+                                                {React.Children.map(children, child => {
+                                                    if (typeof child === 'string' && /^🔗\s*$/.test(child)) return null;
+                                                    return child;
+                                                })}
                                             </div>
                                         </AnimatedSection>
                                     );
                                 }
+
+                                // Contact info — location, phone
+                                if (text.includes('📍') || text.includes('📞')) {
+                                    const icon = getContactIcon(text);
+                                    const cleanText = text.replace(/📍|📞/g, '').trim();
+                                    return (
+                                        <AnimatedSection index={0} className="inline-block">
+                                            <div className="inline-flex items-center gap-2 text-slate-400 font-medium text-sm mr-4 mb-2">
+                                                {icon}
+                                                <span>{cleanText}</span>
+                                            </div>
+                                        </AnimatedSection>
+                                    );
+                                }
+
                                 return (
                                     <AnimatedSection index={1}>
                                         <p className="text-slate-400 leading-relaxed max-w-3xl mb-4 text-base">
@@ -193,20 +230,20 @@ export default function CVRenderer({ markdown }: CVRendererProps) {
                             // ─── Bold text ───
                             strong: ({ children }) => {
                                 const text = String(children);
+                                // Date/location lines — check BEFORE the pipe check since these also contain pipes
+                                if (text.includes('Ukraine') || text.includes('Germany') || text.includes('Poland') || text.match(/\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+\d{4}\b/)) {
+                                    return (
+                                        <span className="block text-sm font-sans italic text-slate-500 mb-3 pl-4">
+                                            {children}
+                                        </span>
+                                    );
+                                }
                                 // Sub-title (role line)
                                 if (text.includes('|')) {
                                     return (
                                         <strong className="block text-center font-medium text-sm text-slate-400 tracking-wider uppercase mb-6">
                                             {children}
                                         </strong>
-                                    );
-                                }
-                                // Date/location badges
-                                if (text.includes('Ukraine') || text.includes('Germany') || text.includes('Poland') || text.match(/\d{4}/)) {
-                                    return (
-                                        <span className="tech-badge">
-                                            {children}
-                                        </span>
                                     );
                                 }
                                 return (
