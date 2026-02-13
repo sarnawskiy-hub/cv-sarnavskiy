@@ -1,62 +1,264 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Print Styles for PDF Export */
-@media print {
-
-  /* Hide background gradients for cleaner PDF */
-  body {
-    background: white !important;
-  }
-
-  /* Hide print button when printing */
-  .print\:hidden {
-    display: none !important;
-  }
-
-  /* Remove shadows and rounded corners for print */
-  * {
-    box-shadow: none !important;
-  }
-
-  /* Ensure proper page breaks */
-  .cv-content {
-    page-break-inside: avoid;
-  }
-
-  /* Optimize margins for print */
-  @page {
-    margin: 1cm;
-  }
-}
-
+/* ─── CSS Variables ─── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+    --background: #0f172a;
+    --foreground: #f8fafc;
+    --gold: #F59E0B;
+    --purple: #8B5CF6;
+    --gold-glow: rgba(245, 158, 11, 0.2);
+    --purple-glow: rgba(139, 92, 246, 0.2);
+    --cursor-size: 20px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ─── Base Styles ─── */
+html {
+    scroll-behavior: smooth;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: 'Inter', sans-serif;
+    color: var(--foreground);
+    background-color: var(--background);
+    font-family: 'DM Sans', system-ui, sans-serif;
+}
+
+/* ─── Custom Cursor (pointer devices only) ─── */
+@media (pointer: fine) {
+    * {
+        cursor: none !important;
+    }
+
+    .smart-cursor {
+        pointer-events: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 9999;
+        mix-blend-mode: difference;
+    }
+
+    .smart-cursor__dot {
+        width: 8px;
+        height: 8px;
+        background: var(--gold);
+        border-radius: 50%;
+        position: absolute;
+        transform: translate(-50%, -50%);
+        transition: width 0.2s ease, height 0.2s ease, background 0.2s ease;
+    }
+
+    .smart-cursor__ring {
+        width: var(--cursor-size);
+        height: var(--cursor-size);
+        border: 2px solid var(--purple);
+        border-radius: 50%;
+        position: absolute;
+        transform: translate(-50%, -50%);
+        transition: width 0.3s ease, height 0.3s ease, border-color 0.3s ease;
+    }
+
+    .smart-cursor--hover .smart-cursor__dot {
+        width: 12px;
+        height: 12px;
+        background: var(--purple);
+    }
+
+    .smart-cursor--hover .smart-cursor__ring {
+        width: 40px;
+        height: 40px;
+        border-color: var(--gold);
+    }
+}
+
+/* ─── Tech Mesh Gradient ─── */
+.mesh-gradient {
+    background-color: #0f172a;
+    background-image:
+        radial-gradient(at 0% 0%, rgba(139, 92, 246, 0.3) 0, transparent 50%),
+        radial-gradient(at 50% 0%, rgba(245, 158, 11, 0.2) 0, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.2) 0, transparent 50%);
+    position: relative;
+}
+
+.mesh-gradient::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image:
+        radial-gradient(at 40% 20%, rgba(245, 158, 11, 0.15) 0, transparent 50%),
+        radial-gradient(at 80% 0%, rgba(139, 92, 246, 0.15) 0, transparent 50%),
+        radial-gradient(at 0% 50%, rgba(245, 158, 11, 0.1) 0, transparent 50%);
+    filter: blur(40px);
+    z-index: 1;
+    animation: meshPulse 8s ease-in-out infinite;
+}
+
+@keyframes meshPulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+}
+
+/* ─── Glassmorphism Card ─── */
+.glass-card {
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-card:hover {
+    border-color: rgba(245, 158, 11, 0.3);
+    box-shadow: 0 0 30px rgba(245, 158, 11, 0.08), 0 0 60px rgba(139, 92, 246, 0.05);
+}
+
+/* ─── Bento Grid Item ─── */
+.bento-item {
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 1.5rem;
+    padding: 2rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.bento-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(245, 158, 11, 0.4), rgba(139, 92, 246, 0.4), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.bento-item:hover::before {
+    opacity: 1;
+}
+
+.bento-item:hover {
+    border-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 20px rgba(245, 158, 11, 0.05);
+    transform: translateY(-2px);
+}
+
+/* ─── Tech Badge ─── */
+.tech-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.375rem 0.875rem;
+    background: rgba(245, 158, 11, 0.1);
+    border: 1px solid rgba(245, 158, 11, 0.2);
+    border-radius: 9999px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #FBBF24;
+    transition: all 0.2s ease;
+}
+
+.tech-badge:hover {
+    background: rgba(245, 158, 11, 0.2);
+    border-color: rgba(245, 158, 11, 0.4);
+}
+
+/* ─── Gold/Purple Divider ─── */
+.tech-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(245, 158, 11, 0.4), rgba(139, 92, 246, 0.4), transparent);
+    margin: 2rem 0;
+}
+
+/* ─── Glow Text ─── */
+.glow-text {
+    text-shadow: 0 0 20px rgba(245, 158, 11, 0.3), 0 0 40px rgba(245, 158, 11, 0.1);
+}
+
+/* ─── Tech Grid Background ─── */
+.tech-bg {
+    position: relative;
+    background-color: #0f172a;
+    background-image:
+        linear-gradient(rgba(245, 158, 11, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(245, 158, 11, 0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: gridFlow 20s linear infinite;
+}
+
+@keyframes gridFlow {
+    0% { background-position: 0 0; }
+    100% { background-position: 60px 60px; }
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #0f172a;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--gold), var(--purple));
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #FBBF24, #A78BFA);
+}
+
+/* ─── Selection ─── */
+::selection {
+    background: rgba(245, 158, 11, 0.3);
+    color: #fff;
+}
+
+/* ─── Print Styles ─── */
+@media print {
+    body {
+        background: white !important;
+        color: #000 !important;
+        -webkit-print-color-adjust: exact;
+    }
+    .print\:hidden {
+        display: none !important;
+    }
+    * {
+        box-shadow: none !important;
+        text-shadow: none !important;
+    }
+    .cv-container {
+        box-shadow: none !important;
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+    @page {
+        margin: 1cm;
+    }
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+    .text-balance {
+        text-wrap: balance;
+    }
 }
 
-html {
-  scroll-behavior: smooth;
+/* ─── Reduced Motion ─── */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
 }
