@@ -117,7 +117,7 @@ export default function CVRenderer({ markdown }: CVRendererProps) {
             </motion.div>
 
             {/* Main Content */}
-            <div className="max-w-5xl mx-auto px-4 sm:px-6">
+            <div className="max-w-5xl mx-auto px-4 sm:px-6 pt-6">
                 <div
                     id="cv-content"
                     className="glass-card rounded-3xl shadow-2xl p-6 sm:p-8 md:p-14 cv-container animate-glow-pulse"
@@ -132,7 +132,6 @@ export default function CVRenderer({ markdown }: CVRendererProps) {
                                         <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold font-heading bg-clip-text text-transparent bg-gradient-to-r from-gold-400 via-gold-500 to-purple-400 pb-4 tracking-tight glow-text leading-tight">
                                             {children}
                                         </h1>
-                                        <div className="mx-auto w-32 h-1 bg-gradient-to-r from-gold-500 via-purple-500 to-gold-500 rounded-full mt-2" />
                                     </div>
                                 </AnimatedSection>
                             ),
@@ -246,12 +245,12 @@ export default function CVRenderer({ markdown }: CVRendererProps) {
                                 // Subtitle (role line after name) — white/black + colored divider
                                 if (text.includes('|')) {
                                     return (
-                                        <div className="text-center mb-6">
+                                        <span className="block text-center mb-6">
                                             <strong className="block font-bold text-sm tracking-[0.2em] uppercase text-white dark:text-white subtitle-text">
                                                 {children}
                                             </strong>
-                                            <div className="mx-auto w-48 h-[2px] mt-3 rounded-full bg-gradient-to-r from-gold-500 via-purple-500 to-gold-500" />
-                                        </div>
+                                            <span className="block mx-auto w-48 h-[2px] mt-3 rounded-full bg-gradient-to-r from-gold-500 via-purple-500 to-gold-500" />
+                                        </span>
                                     );
                                 }
                                 return (
